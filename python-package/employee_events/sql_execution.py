@@ -27,9 +27,10 @@ class QueryMixin:
     # a list of tuples. (You will need
     # to use an sqlite3 cursor)
     def query(self, query: str='')->pd.DataFrame:
-        con = sqlite3.connect(db_path)
+        con = connect(db_path)
         cur = con.cursor()
         res = cur.execute(query)
+        con.close()
         return res.fetchall()
 
 
