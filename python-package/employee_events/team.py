@@ -1,12 +1,16 @@
+import pandas as pd
+
 # Import the QueryBase class
-# YOUR CODE HERE
+from query_base import QueryBase
 
 # Import dependencies for sql execution
 #### YOUR CODE HERE
+from sql_execution import query
+
 
 # Create a subclass of QueryBase
 # called  `Team`
-#### YOUR CODE HERE
+class Team(QueryBase)
 
     # Set the class attribute `name`
     # to the string "team"
@@ -50,17 +54,18 @@
     # is returns containing the execution of
     # the sql query
     #### YOUR CODE HERE
-    def model_data(self, id):
+def model_data(self, id):
 
-        return f"""
-            SELECT positive_events, negative_events FROM (
-                    SELECT employee_id
-                         , SUM(positive_events) positive_events
-                         , SUM(negative_events) negative_events
-                    FROM {self.name}
-                    JOIN employee_events
-                        USING({self.name}_id)
-                    WHERE {self.name}.{self.name}_id = {id}
-                    GROUP BY employee_id
-                   )
-                """
+    query = f"""
+        SELECT positive_events, negative_events FROM (
+                SELECT employee_id
+                        , SUM(positive_events) positive_events
+                        , SUM(negative_events) negative_events
+                FROM {self.name}
+                JOIN employee_events
+                    USING({self.name}_id)
+                WHERE {self.name}.{self.name}_id = {id}
+                GROUP BY employee_id
+                )
+            """
+    return pd.DataFrame(query(query))
