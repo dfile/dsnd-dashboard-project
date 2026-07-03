@@ -8,17 +8,18 @@
 # Define a subclass of QueryBase
 # called Employee
 #### YOUR CODE HERE
+class Employee(QueryMixin, QueryBase):
 
     # Set the class attribute `name`
     # to the string "employee"
-    #### YOUR CODE HERE
+    name = "employee"
 
 
     # Define a method called `names`
     # that receives no arguments
     # This method should return a list of tuples
     # from an sql execution
-    #### YOUR CODE HERE
+    def names(self)->list:
         
         # Query 3
         # Write an SQL query
@@ -27,7 +28,7 @@
         # 2. The employee's id
         # This query should return the data
         # for all employees in the database
-        #### YOUR CODE HERE
+        query = "SELECT CONCAT(first_name, ' ', last_name), employee_id FROM employee"
     
 
     # Define a method called `username`
