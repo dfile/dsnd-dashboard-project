@@ -31,7 +31,7 @@ class QueryMixin:
         cur = con.cursor()
         res = cur.execute(query)
         con.close()
-        return res.fetchall()
+        return pd.DataFrame(res.fetchall())
 
 
  
