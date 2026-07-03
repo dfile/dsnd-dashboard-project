@@ -26,12 +26,12 @@ class QueryMixin:
     # and returns the query's result as
     # a list of tuples. (You will need
     # to use an sqlite3 cursor)
-    def query(self, query: str='')->pd.DataFrame:
+    def query(self, query: str='')->list:
         con = connect(db_path)
         cur = con.cursor()
-        res = cur.execute(query)
+        res = cur.execute(query).fetchall()
         con.close()
-        return pd.DataFrame(res.fetchall())
+        return res
 
 
  
