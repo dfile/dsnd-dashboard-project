@@ -1,14 +1,14 @@
 # Import the QueryBase class
-#### YOUR CODE HERE
+from query_base import QueryBase
 
 # Import dependencies needed for sql execution
 # from the `sql_execution` module
-#### YOUR CODE HERE
+from sql_execution import QueryMixin
 
 # Define a subclass of QueryBase
 # called Employee
 #### YOUR CODE HERE
-class Employee(QueryMixin, QueryBase):
+class Employee(QueryBase):
 
     # Set the class attribute `name`
     # to the string "employee"
@@ -28,22 +28,24 @@ class Employee(QueryMixin, QueryBase):
         # 2. The employee's id
         # This query should return the data
         # for all employees in the database
-        query = "SELECT CONCAT(first_name, ' ', last_name), employee_id FROM employee"
+        query_names = """SELECT CONCAT(first_name, ' ', last_name), employee_id FROM employee"""
+        return self.query(query_names)
     
 
     # Define a method called `username`
     # that receives an `id` argument
     # This method should return a list of tuples
     # from an sql execution
-    #### YOUR CODE HERE
-        
+    def username(self, id:int)->list:
+
         # Query 4
         # Write an SQL query
         # that selects an employees full name
         # Use f-string formatting and a WHERE filter
         # to only return the full name of the employee
         # with an id equal to the id argument
-        #### YOUR CODE HERE
+        query = f"""SELECT CONCAT(first_name, ' ', last_name) FROM employee WHERE employee_id={id}"""
+        return self.query(query)
 
 
     # Below is method with an SQL query
