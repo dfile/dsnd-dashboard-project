@@ -22,7 +22,7 @@ class QueryBase(QueryMixin):
     # Define an `event_counts` method
     # that receives an `id` argument
     # This method should return a pandas dataframe
-    def event_counts(self, id:int)->pd.DataFrame:
+    def event_counts(self, id:str)->pd.DataFrame:
 
         # QUERY 1
         # Write an SQL query that groups by `event_date`
@@ -32,7 +32,7 @@ class QueryBase(QueryMixin):
         # Use f-string formatting to set the name
         # of id columns used for joining
         # order by the event_date column
-        query = f"SELECT event_date, COUNT(positive_events, negative_events), FROM {self.name}\
+        query = f"SELECT event_date, COUNT(positive_events), COUNT(negative_events) FROM {self.name}\
             JOIN employee_events\
             ON {self.name}.{id} = employee_events.{id}\
             GROUP BY event_date\
