@@ -1,20 +1,21 @@
 import pandas as pd
 
 # Import the QueryBase class
-from query_base import QueryBase
+from .query_base import QueryBase
 
 # Import dependencies for sql execution
 #### YOUR CODE HERE
-from sql_execution import query
+from .sql_execution import QueryMixin
 
 
 # Create a subclass of QueryBase
 # called  `Team`
-class Team(QueryBase)
+class Team(QueryBase):
 
     # Set the class attribute `name`
     # to the string "team"
     #### YOUR CODE HERE
+    name = "team"
 
 
     # Define a `names` method
@@ -22,20 +23,24 @@ class Team(QueryBase)
     # This method should return
     # a list of tuples from an sql execution
     #### YOUR CODE HERE
-        
+    def names(self) -> list:
+
         # Query 5
         # Write an SQL query that selects
         # the team_name and team_id columns
         # from the team table for all teams
         # in the database
         #### YOUR CODE HERE
-    
+        query_names = """SELECT team_name, team_id FROM team"""
+        return self.query(query_names)
+
 
     # Define a `username` method
     # that receives an ID argument
     # This method should return
     # a list of tuples from an sql execution
     #### YOUR CODE HERE
+    def username(self, id: int) -> list:
 
         # Query 6
         # Write an SQL query
@@ -44,6 +49,8 @@ class Team(QueryBase)
         # to only return the team name related to
         # the ID argument
         #### YOUR CODE HERE
+        query_username = f"""SELECT team_name FROM team WHERE team_id={id}"""
+        return self.query(query_username)
 
 
     # Below is method with an SQL query
@@ -54,18 +61,18 @@ class Team(QueryBase)
     # is returns containing the execution of
     # the sql query
     #### YOUR CODE HERE
-def model_data(self, id):
+    def model_data(self, id):
 
-    query = f"""
-        SELECT positive_events, negative_events FROM (
-                SELECT employee_id
-                        , SUM(positive_events) positive_events
-                        , SUM(negative_events) negative_events
-                FROM {self.name}
-                JOIN employee_events
-                    USING({self.name}_id)
-                WHERE {self.name}.{self.name}_id = {id}
-                GROUP BY employee_id
-                )
-            """
-    return pd.DataFrame(query(query))
+        query = f"""
+            SELECT positive_events, negative_events FROM (
+                    SELECT employee_id
+                            , SUM(positive_events) positive_events
+                            , SUM(negative_events) negative_events
+                    FROM {self.name}
+                    JOIN employee_events
+                        USING({self.name}_id)
+                    WHERE {self.name}.{self.name}_id = {id}
+                    GROUP BY employee_id
+                    )
+                """
+        return self.pandas_query(query)
