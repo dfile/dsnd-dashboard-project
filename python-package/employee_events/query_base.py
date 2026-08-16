@@ -32,9 +32,10 @@ class QueryBase(QueryMixin):
         # Use f-string formatting to set the name
         # of id columns used for joining
         # order by the event_date column
-        query = f"SELECT event_date, COUNT(positive_events), COUNT(negative_events) FROM {self.name}\
+        query = f"SELECT event_date, COUNT(positive_events) positive_events_count, COUNT(negative_events) negative_events_count FROM {self.name}\
             JOIN employee_events\
-            ON {self.name}.{id} = employee_events.{id}\
+            ON {self.name}.{self.name}_id = employee_events.{self.name}_id\
+            WHERE {self.name}.{self.name}_id = {id}\
             GROUP BY event_date\
             ORDER BY event_date"
         return self.pandas_query(query)
@@ -52,8 +53,9 @@ class QueryBase(QueryMixin):
         # with f-string formatting
         # so the query returns the notes
         # for the table name in the `name` class attribute
-        query = "SELECT note_date, note FROM notes\
+        query = f"SELECT note_date, note FROM notes\
             JOIN {self.name}\
-            ON notes.{id}={self.name}.{id}"
+            ON notes.{self.name}_id = {self.name}.{self.name}_id\
+            WHERE {self.name}.{self.name}_id = {id}"
         return self.pandas_query(query)
 

@@ -17,8 +17,12 @@ class QueryMixin:
     # and returns the query's result
     # as a pandas dataframe
     def pandas_query(self, query: str)->pd.DataFrame:
-        res = self.query(query)
-        return pd.DataFrame(res)
+        con = connect(db_path)
+        cur = con.cursor()
+        res = cur.execute(query).fetchall()
+        columns = [description[0] for description in cur.description]
+        con.close()
+        return pd.DataFrame(res, columns=columns)
 
 
     # Define a method named `query`
