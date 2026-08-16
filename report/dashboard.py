@@ -122,30 +122,29 @@ class LineChart(MatplotlibViz):
 
 # Create a subclass of base_components/MatplotlibViz
 # called `BarChart`
-class Barchart(MatplotlibViz):
+class BarChart(MatplotlibViz):
 
     # Create a `predictor` class attribute
     # assign the attribute to the output
     # of the `load_model` utils function
-    #### YOUR CODE HERE
+    predictor = load_model()
 
     # Overwrite the parent class `visualization` method
     # Use the same parameters as the parent
-    #### YOUR CODE HERE
-
+    def visualization(self, entity_id, model):
         # Using the model and asset_id arguments
         # pass the `asset_id` to the `.model_data` method
         # to receive the data that can be passed to the machine
         # learning model
-        #### YOUR CODE HERE
+        data = model.model_data(entity_id)
         
         # Using the predictor class attribute
         # pass the data to the `predict_proba` method
-        #### YOUR CODE HERE
+        probs = self.predictor.predict_proba(data)
         
         # Index the second column of predict_proba output
         # The shape should be (<number of records>, 1)
-        #### YOUR CODE HERE
+        probs = probs[:,1]
         
         
         # Below, create a `pred` variable set to
@@ -153,14 +152,16 @@ class Barchart(MatplotlibViz):
         #
         # If the model's name attribute is "team"
         # We want to visualize the mean of the predict_proba output
-        #### YOUR CODE HERE
-            
+        if model.name == "team":
+            pred = probs.mean()
+             
         # Otherwise set `pred` to the first value
         # of the predict_proba output
-        #### YOUR CODE HERE
+        else:
+            pred = probs[0]
         
         # Initialize a matplotlib subplot
-        #### YOUR CODE HERE
+        fig, ax = plt.subplots()
         
         # Run the following code unchanged
         ax.barh([''], [pred])
@@ -170,33 +171,33 @@ class Barchart(MatplotlibViz):
         # pass the axis variable
         # to the `.set_axis_styling`
         # method
-        #### YOUR CODE HERE
+        self.set_axis_styling(ax)
  
 # Create a subclass of combined_components/CombinedComponent
 # called Visualizations       
-#### YOUR CODE HERE
+class Visualizations(CombinedComponent):
 
     # Set the `children`
     # class attribute to a list
     # containing an initialized
     # instance of `LineChart` and `BarChart`
-    #### YOUR CODE HERE
+    children = [LineChart(), BarChart()]
 
     # Leave this line unchanged
     outer_div_type = Div(cls='grid')
             
 # Create a subclass of base_components/DataTable
 # called `NotesTable`
-#### YOUR CODE HERE
+class NotesTable(DataTable):
 
     # Overwrite the `component_data` method
     # using the same parameters as the parent class
-    #### YOUR CODE HERE
+    def component_data(self, entity_id, model):
         
         # Using the model and entity_id arguments
         # pass the entity_id to the model's .notes 
         # method. Return the output
-        #### YOUR CODE HERE
+        return model.notes(entity_id)
     
 
 class DashboardFilters(FormGroup):
@@ -219,31 +220,31 @@ class DashboardFilters(FormGroup):
     
 # Create a subclass of CombinedComponents
 # called `Report`
-#### YOUR CODE HERE
+class Report(CombinedComponent):
 
     # Set the `children`
     # class attribute to a list
     # containing initialized instances 
     # of the header, dashboard filters,
     # data visualizations, and notes table
-    #### YOUR CODE HERE
+    children = [Header(), DashboardFilters(), Visualizations(), NotesTable()]
 
 # Initialize a fasthtml app 
-#### YOUR CODE HERE
+app = FastHTML()
 
 # Initialize the `Report` class
-#### YOUR CODE HERE
+report = Report()
 
 
 # Create a route for a get request
 # Set the route's path to the root
-#### YOUR CODE HERE
-
+@app.get("/")
+def get():
     # Call the initialized report
     # pass the integer 1 and an instance
     # of the Employee class as arguments
     # Return the result
-    #### YOUR CODE HERE
+    return report(1, Employee())
 
 # Create a route for a get request
 # Set the route's path to receive a request
@@ -252,13 +253,13 @@ class DashboardFilters(FormGroup):
 # an ID of `2`. 
 # parameterize the employee ID 
 # to a string datatype
-#### YOUR CODE HERE
-
+@app.get("/employee/{templated_variable}")
+def get(templated_variable: str):
     # Call the initialized report
     # pass the ID and an instance
     # of the Employee SQL class as arguments
     # Return the result
-    #### YOUR CODE HERE
+    return report(templated_variable, Employee())
 
 # Create a route for a get request
 # Set the route's path to receive a request
@@ -267,13 +268,13 @@ class DashboardFilters(FormGroup):
 # an ID of `2`. 
 # parameterize the team ID 
 # to a string datatype
-#### YOUR CODE HERE
-
+@app.get("/team/{templated_variable}")
+def get(templated_variable: str):
     # Call the initialized report
     # pass the id and an instance
     # of the Team SQL class as arguments
     # Return the result
-    #### YOUR CODE HERE
+    return report(templated_variable, Team())
 
 
 # Keep the below code unchanged!
