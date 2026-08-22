@@ -103,7 +103,7 @@ class LineChart(MatplotlibViz):
         fig, ax = plt.subplots()        
         # call the .plot method for the
         # cumulative counts dataframe
-        events_cum.plot(ax=ax)
+        events_cum.plot(ax=ax, y=["Positive", "Negative"], kind="line")
         
         # pass the axis variable
         # to the `.set_axis_styling`
@@ -161,17 +161,17 @@ class BarChart(MatplotlibViz):
             pred = probs[0]
         
         # Initialize a matplotlib subplot
-        fig, ax = plt.subplots()
+        fig, ax2 = plt.subplots()
         
         # Run the following code unchanged
-        ax.barh([''], [pred])
-        ax.set_xlim(0, 1)
-        ax.set_title('Predicted Recruitment Risk', fontsize=20)
+        ax2.barh([''], [pred])
+        ax2.set_xlim(0, 1)
+        ax2.set_title('Predicted Recruitment Risk', fontsize=20)
         
         # pass the axis variable
         # to the `.set_axis_styling`
         # method
-        self.set_axis_styling(ax)
+        self.set_axis_styling(ax2, bordercolor="black", fontcolor="black")
  
 # Create a subclass of combined_components/CombinedComponent
 # called Visualizations       
